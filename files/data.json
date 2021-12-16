@@ -1,0 +1,79 @@
+{
+  "prefix": {
+    "example": "http://localhost:4444/example/",
+    "default": "http://localhost:4444/"
+  },
+  "entity": {
+    "print": {
+      "prov:type": "print",
+      "destination": "iot1"
+    },
+    "document": {
+      "prov:type": "doc",
+      "author": "Romulo",
+      "title": "Doc Title",
+      "format": "pdf"
+    }
+  },
+  "activity": {
+    "transaction001": {
+      "prov:startTime": "2021-12-01T15:37:58.503887",
+      "prov:type": "transaction",
+      "transactionKey": "e619269265072f5b3c9b3cce1ed0ebe2",
+      "createdAt": {
+        "$": "2021-12-01T15:37:58.503891",
+        "type": "xsd:dateTime"
+      }
+    },
+    "generetedPrinting001": {
+      "prov:startTime": "2021-12-01T15:37:58.503923",
+      "prov:type": "docGenerated"
+    }
+  },
+  "agent": {
+    "user - r01": {
+      "prov:type": "user",
+      "pki": "97f3c717da19b4697ae9884e67aabce6"
+    }
+  },
+  "wasGeneratedBy": {
+    "_:id1": {
+      "prov:entity": "document",
+      "prov:activity": "generetedPrinting001"
+    },
+    "_:id6": {
+      "prov:entity": "print",
+      "prov:activity": "transaction001"
+    }
+  },
+  "wasDerivedFrom": {
+    "_:id2": {
+      "prov:generatedEntity": "document",
+      "prov:usedEntity": "print"
+    }
+  },
+  "used": {
+    "_:id3": {
+      "prov:activity": "transaction001",
+      "prov:entity": "print"
+    }
+  },
+  "wasAssociatedWith": {
+    "_:id4": {
+      "prov:activity": "transaction001",
+      "prov:agent": "user - r01"
+    }
+  },
+  "wasInformedBy": {
+    "_:id5": {
+      "prov:informed": "generetedPrinting001",
+      "prov:informant": "transaction001"
+    }
+  },
+  "wasAttributedTo": {
+    "_:id7": {
+      "prov:entity": "print",
+      "prov:agent": "user - r01"
+    }
+  }
+}
