@@ -1,0 +1,16 @@
+document
+  default <http://localhost:4444/>
+  prefix example <http://localhost:4444/example/>
+  
+  activity(Transaction001, 2021-12-07T17:32:36.392769, -, [prov:type="transaction", transactionKey="09090", createdAt="date"])
+  activity(DocGenerated001, 2021-12-07T17:32:36.392861, -, [prov:type="docGenerated"])
+  entity(doc, [prov:type="doc", author="Rômulo Soares", title="Doc File", format="pdf"])
+  entity(Print01, [prov:type="print", destination="iot01"])
+  agent(userR01, [prov:type="user", pki="97f3c717da19b4697ae9884e67aabce6"])
+  wasGeneratedBy(doc, DocGenerated001, -)
+  wasDerivedFrom(doc, Print01, -, -, -)
+  used(Transaction001, Print01, -)
+  wasAssociatedWith(Transaction001, userR01, -)
+  wasInformedBy(DocGenerated001, Transaction001)
+  wasGeneratedBy(Print01, Transaction001, -)
+endDocument
