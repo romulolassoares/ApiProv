@@ -18,12 +18,12 @@ Para executar, siga estas etapas:
 pip install -r requirements.txt
 
 # Start the service:
-uvicorn app:app --reload
+uvicorn app:app --reload --port 3333
 ```
 
 (Verifique [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) caso você necessite do MongoDB)
 
-Agora você pode acessar http://localhost:8000/_docs em seu navegador
+Agora você pode acessar http://localhost:3333/docs em seu navegador
 
 
 ## 🤝 Colaboradores
