@@ -23,11 +23,23 @@ async def show_activity(idActivity: str):
    if (activity := await database.db["activity"].find_one({"_id": idActivity})) is not None:
       return activity
 
-   raise HTTPException(status_code=404, detail=f"Activity {id} not found")
+   raise HTTPException(status_code=404, detail=f"Activity {idActivity} not found")
+
+@router.get("/get/name/{nameActivity}", response_description="Get a single activity by name", response_model=provenanceModel.activityModel)
+async def show_activity_name(nameActivity: str):
+   if (activity := await database.db["activity"].find_one({"name": nameActivity})) is not None:
+      return activity
+
+   raise HTTPException(status_code=404, detail=f"Activity {nameActivity} not found")
  
 @router.post("/post/", response_description="Add new activity", response_model=provenanceModel.activityModel)
 async def create_activity(activity: provenanceModel.activityModel = Body(...)):
    activity = jsonable_encoder(activity)
-   new_activity = await database.db["activity"].insert_one(activity)
-   created_activity = await database.db["activity"].find_one({"_id": new_activity.inserted_id})
-   return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_activity)
+   
+   if (activity := await database.db["activity"].find_one({"_id": activity["name"]})) is not None:
+      print("Already exists")
+      return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"error": "Already exists"})
+   else:
+      new_activity = await database.db["activity"].insert_one(activity)
+      created_activity = await database.db["activity"].find_one({"_id": new_activity.inserted_id})
+      return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_activity)
