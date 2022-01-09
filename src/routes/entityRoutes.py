@@ -23,12 +23,24 @@ async def show_entity(idEntity: str):
     if (entity := await database.db["entity"].find_one({"_id": idEntity})) is not None:
         return entity
 
-    raise HTTPException(status_code=404, detail=f"Entity {id} not found")
+    raise HTTPException(status_code=404, detail=f"Entity {idEntity} not found")
+
+@router.get("/get/name/{nameEntity}", response_description="Get a single entity", response_model=provenanceModel.entityModel)
+async def show_entity_name(nameEntity: str):
+    if (entity := await database.db["entity"].find_one({"name": nameEntity})) is not None:
+        return entity
+
+    raise HTTPException(status_code=404, detail=f"Entity {nameEntity} not found")
 
 
-@router.post("/post/", response_description="Add new entity", response_model=provenanceModel.entityModel)
+@router.post("/post/", response_description="Add new entity by name", response_model=provenanceModel.entityModel)
 async def create_entity(entity: provenanceModel.entityModel = Body(...)):
     entity = jsonable_encoder(entity)
-    new_entity = await database.db["entity"].insert_one(entity)
-    created_entity = await database.db["entity"].find_one({"_id": new_entity.inserted_id})
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_entity)
+        
+    if (entity := await database.db["entity"].find_one({"name": entity["name"]})) is not None:
+        print("Already exists")
+        return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"error": "Already exists"})
+    else:
+        new_entity = await database.db["entity"].insert_one(entity)
+        created_entity = await database.db["entity"].find_one({"_id": new_entity.inserted_id})
+        return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_entity)
