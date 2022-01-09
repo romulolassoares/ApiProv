@@ -67,11 +67,20 @@ async def show_provData(id: str):
     raise HTTPException(status_code=404, detail=f"Provenance Data {id} not found")
 
 @router.post("/generate_prov_data/", response_description="Add new provenance data on database", response_model=List[provenanceModel.ProvModel])
-async def create_provData(data: provenanceModel.ProvModel = Body(...)):
-    provDataDoc = json.loads(data)
+async def create_provData():
+    # provDataDoc = json.loads(data)
+    data = {
+        "key": "8839c2e520b5977e8d719471fa8d3a75",
+        "data": {
+            "name": "DocGenerated001",
+            "provType": "docGenerated",
+            "info": {}
+        }
+    }
+    provDataDoc = data
     
-    key = hashlib.sha256(data.encode("utf-8")).hexdigest()
-    
+    key = hashlib.sha256(data["key"].encode("utf-8")).hexdigest()
+    print(type(provDataDoc))
     provData = provenanceModel.ProvModel(id=provenanceModel.ObjectId() ,key=key, data=provDataDoc)
     
     provData = jsonable_encoder(provData)

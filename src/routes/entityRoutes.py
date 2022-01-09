@@ -37,7 +37,7 @@ async def show_entity_name(nameEntity: str):
 async def create_entity(entity: provenanceModel.entityModel = Body(...)):
     entity = jsonable_encoder(entity)
         
-    if (entity := await database.db["entity"].find_one({"name": entity["name"]})) is not None:
+    if (varEntity := await database.db["entity"].find_one({"name": entity["name"]})) is not None:
         print("Already exists")
         return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"error": "Already exists"})
     else:
