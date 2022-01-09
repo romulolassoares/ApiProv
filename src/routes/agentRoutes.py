@@ -36,7 +36,7 @@ async def show_agent_name(nameAgent: str):
 async def create_agent(agent: provenanceModel.agentModel = Body(...)):
     agent = jsonable_encoder(agent)
     
-    if (agent := await database.db["agent"].find_one({"name": agent["name"]})) is not None:
+    if (varAgent := await database.db["agent"].find_one({"name": agent["name"]})) is not None:
         print("Already exists")
         return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"error": "Already exists"})
     else:

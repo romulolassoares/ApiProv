@@ -87,7 +87,7 @@ async def was_associated_with(idAgent: str, idActivity: str):
    provDocument = function.json2DocumentProvenance(lastProvDocument['data'])
    agentDB = await agentRoutes.show_agent(idAgent)
 
-   activityDB = await entityRoutes.show_activity(idActivity)
+   activityDB = await activityRoutes.show_activity(idActivity)
    agent = provenance.generateActivity(provDocument, agentDB['name'], agentDB['_id'])
    activity = provenance.generateEntity(provDocument, activityDB['name'], activityDB['_id'])
    
@@ -103,7 +103,7 @@ async def was_derived_from(idEntity1: str, idEntity2: str):
    lastProvDocument = provDocument[len(provDocument)-1]
 
    provDocument = function.json2DocumentProvenance(lastProvDocument['data'])
-   entity1DB = await agentRoutes.show_entity(idEntity1)
+   entity1DB = await entityRoutes.show_entity(idEntity1)
 
    entity2DB = await entityRoutes.show_entity(idEntity2)
    entity1 = provenance.generateEntity(provDocument, entity1DB['name'], entity1DB['_id'])
@@ -123,7 +123,7 @@ async def acted_on_behalf_of(idAgent1: str, idAgent2: str):
    provDocument = function.json2DocumentProvenance(lastProvDocument['data'])
    
    agent1DB = await agentRoutes.show_agent(idAgent1)
-   agent2DB = await entityRoutes.show_agent(idAgent2)
+   agent2DB = await agentRoutes.show_agent(idAgent2)
    
    agent1 = provenance.generateAgent(provDocument, agent1DB['name'], agent1DB['_id'])
    agent2 = provenance.generateAgent(provDocument, agent2DB['name'], agent2DB['_id'])
