@@ -81,11 +81,12 @@ async def was_attribuited_to(idAgent: str, idEntity: str):
    agent = provenance.generateActivity(provDocument, agentDB['name'], agentDB['_id'])
    entity = provenance.generateEntity(provDocument, entityDB['name'], entityDB['_id'])
    
-   entity.wasGeneratedBy(agent)
+   entity.wasAttributedTo(agent)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_associated_with/{idAgent}&{adActivity}", response_description="Was Used")
 async def was_associated_with(idAgent: str, idActivity: str):
