@@ -19,6 +19,13 @@ router = APIRouter(
 async def sendToDatabase(provID, document):
    await provRoutes.update_provData(provID, document)
 
+def generateNewProvDocument(provDocument, lastProvDocument):
+   dataSTR = provDocument.serialize(None, 'json')
+   dataJSON = json.loads(dataSTR)
+   newProvDocument = lastProvDocument
+   newProvDocument["data"] = dataJSON
+   return newProvDocument
+
 @router.post("/was_used/{idActivity}&{idEntity}", response_description="Was Used")
 async def was_used(idActivity: str, idEntity: str):
    provDocument = await database.db['provenanceData'].find().to_list(1000)
@@ -37,9 +44,10 @@ async def was_used(idActivity: str, idEntity: str):
    # dictData = json.loads(provDocument.serialize())
    # await sendToDatabase(lastProvDocument["_id"], dictData)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_generated_by/{idActivity}&{idEntity}", response_description="Was Used")
 async def was_generated_by(idActivity: str, idEntity: str):
@@ -55,10 +63,10 @@ async def was_generated_by(idActivity: str, idEntity: str):
    entity = provenance.generateEntity(provDocument, entityDB['name'], entityDB['_id'])
    
    entity.wasGeneratedBy(activity)
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   await provRoutes.create_provData(provDocument.serialize())
-   
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_attribuited_to/{idAgent}&{idEntity}", response_description="Was Used")
 async def was_attribuited_to(idAgent: str, idEntity: str):
@@ -73,11 +81,12 @@ async def was_attribuited_to(idAgent: str, idEntity: str):
    agent = provenance.generateActivity(provDocument, agentDB['name'], agentDB['_id'])
    entity = provenance.generateEntity(provDocument, entityDB['name'], entityDB['_id'])
    
-   entity.wasGeneratedBy(agent)
+   entity.wasAttributedTo(agent)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_associated_with/{idAgent}&{adActivity}", response_description="Was Used")
 async def was_associated_with(idAgent: str, idActivity: str):
@@ -91,11 +100,13 @@ async def was_associated_with(idAgent: str, idActivity: str):
    agent = provenance.generateActivity(provDocument, agentDB['name'], agentDB['_id'])
    activity = provenance.generateEntity(provDocument, activityDB['name'], activityDB['_id'])
    
-   activity.wasGeneratedBy(agent)
+   # activity.wasAssociatedWith(agent)
+   agent.wasAssociatedWith(activity)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_derived_from/{idEntity1}&{idEntity2}", response_description="Was Used")
 async def was_derived_from(idEntity1: str, idEntity2: str):
@@ -111,9 +122,10 @@ async def was_derived_from(idEntity1: str, idEntity2: str):
    
    entity1.wasDerivedFrom(entity2)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/acted_on_behalf_of/{idAgent1}&{idAgent2}", response_description="Was Used")
 async def acted_on_behalf_of(idAgent1: str, idAgent2: str):
@@ -130,12 +142,13 @@ async def acted_on_behalf_of(idAgent1: str, idAgent2: str):
    
    agent1.actedOnBehalfOf(agent2)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_informed_by/{idActivity1}&{idActivity2}", response_description="Was Used")
-async def was_generated_by(idActivity1: str, idActivity2: str):
+async def was_informed_by(idActivity1: str, idActivity2: str):
    provDocument = await database.db['provenanceData'].find().to_list(1000)
    lastProvDocument = provDocument[len(provDocument)-1]
 
@@ -147,8 +160,9 @@ async def was_generated_by(idActivity1: str, idActivity2: str):
    activity1 = provenance.generateActivity(provDocument, activity1DB['name'], activity1DB['_id'])
    activity2 = provenance.generateactivity(provDocument, activity2DB['name'], activity2DB['_id'])
    
-   activity1.wasGeneratedBy(activity2)
+   activity1.wasInformedBy(activity2)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument

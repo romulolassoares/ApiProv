@@ -67,21 +67,23 @@ async def show_provData(id: str):
     raise HTTPException(status_code=404, detail=f"Provenance Data {id} not found")
 
 @router.post("/generate_prov_data/", response_description="Add new provenance data on database", response_model=List[provenanceModel.ProvModel])
-async def create_provData():
-    # provDataDoc = json.loads(data)
-    data = {
+async def create_provData(data: dict):
+    if data is None:
+        data = {
         "key": "8839c2e520b5977e8d719471fa8d3a75",
         "data": {
-            "name": "DocGenerated001",
-            "provType": "docGenerated",
-            "info": {}
+                "name": "DocGenerated001",
+                "provType": "docGenerated",
+                "info": {}
+            }
         }
-    }
+    if type(data) is str:
+        data = json.loads(data)
     provDataDoc = data
-    
+
     key = hashlib.sha256(data["key"].encode("utf-8")).hexdigest()
-    print(type(provDataDoc))
-    provData = provenanceModel.ProvModel(id=provenanceModel.ObjectId() ,key=key, data=provDataDoc)
+
+    provData = provenanceModel.ProvModel(id=provenanceModel.ObjectId() ,key=key, data=provDataDoc["data"])
     
     provData = jsonable_encoder(provData)
     
@@ -107,3 +109,15 @@ async def update_provData(id: str, provData: dict):
     
     raise HTTPException(status_code=404, detail=f"Provenace Data {id} not found")
 
+@router.post("/start_prov_data/", response_description="Start Provenance Data", response_model=List[provenanceModel.ProvModel])
+async def start_prov_data(provData: provenanceModel.ProvModel = Body(...)):  
+    key = hashlib.sha256(provData.key.encode("utf-8")).hexdigest()
+
+    provData = provenanceModel.ProvModel(id=provenanceModel.ObjectId() ,key=key, data=provData.data)
+    
+    provData = jsonable_encoder(provData)
+    
+    new_provData = await database.db["provenanceData"].insert_one(provData)
+    created_provData = await database.db["provenanceData"].find_one({"_id": new_provData.inserted_id})
+    
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_provData)
