@@ -148,7 +148,7 @@ async def acted_on_behalf_of(idAgent1: str, idAgent2: str):
    return newProvDocument
 
 @router.post("/was_informed_by/{idActivity1}&{idActivity2}", response_description="Was Used")
-async def was_generated_by(idActivity1: str, idActivity2: str):
+async def was_informed_by(idActivity1: str, idActivity2: str):
    provDocument = await database.db['provenanceData'].find().to_list(1000)
    lastProvDocument = provDocument[len(provDocument)-1]
 
@@ -160,8 +160,9 @@ async def was_generated_by(idActivity1: str, idActivity2: str):
    activity1 = provenance.generateActivity(provDocument, activity1DB['name'], activity1DB['_id'])
    activity2 = provenance.generateactivity(provDocument, activity2DB['name'], activity2DB['_id'])
    
-   activity1.wasGeneratedBy(activity2)
+   activity1.wasInformedBy(activity2)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
