@@ -63,10 +63,10 @@ async def was_generated_by(idActivity: str, idEntity: str):
    entity = provenance.generateEntity(provDocument, entityDB['name'], entityDB['_id'])
    
    entity.wasGeneratedBy(activity)
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   await provRoutes.create_provData(provDocument.serialize())
-   
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_attribuited_to/{idAgent}&{idEntity}", response_description="Was Used")
 async def was_attribuited_to(idAgent: str, idEntity: str):
