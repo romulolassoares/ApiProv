@@ -122,9 +122,10 @@ async def was_derived_from(idEntity1: str, idEntity2: str):
    
    entity1.wasDerivedFrom(entity2)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/acted_on_behalf_of/{idAgent1}&{idAgent2}", response_description="Was Used")
 async def acted_on_behalf_of(idAgent1: str, idAgent2: str):
