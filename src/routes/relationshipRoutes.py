@@ -37,9 +37,13 @@ async def was_used(idActivity: str, idEntity: str):
    # dictData = json.loads(provDocument.serialize())
    # await sendToDatabase(lastProvDocument["_id"], dictData)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   dataSTR = provDocument.serialize(None, 'json')
+   dataJSON = json.loads(dataSTR)
+   newProvDocument = lastProvDocument
+   newProvDocument["data"] = dataJSON
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_generated_by/{idActivity}&{idEntity}", response_description="Was Used")
 async def was_generated_by(idActivity: str, idEntity: str):

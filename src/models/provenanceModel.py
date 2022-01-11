@@ -141,13 +141,15 @@ class ProvModel(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "key": "8839c2e520b5977e8d719471fa8d3a75",
+                "key": "c5ba35e43711ffdcbc869d74731fa4c48387910537741ddd2a09a6d52bd4e104",
                 "data": {
-                    "name": "DocGenerated001",
-                    "provType": "docGenerated",
-                    "info": {}
+                    "prefix": {
+                        "example": "http://localhost:4444/example/",
+                        "default": "http://localhost:4444/"
+                    }
                 }
             }
+
         }
         
 class UpdateProvModel(BaseModel):
