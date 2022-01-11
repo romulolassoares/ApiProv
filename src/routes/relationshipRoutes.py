@@ -142,9 +142,10 @@ async def acted_on_behalf_of(idAgent1: str, idAgent2: str):
    
    agent1.actedOnBehalfOf(agent2)
    
-   await provRoutes.create_provData(provDocument.serialize())
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
+   await provRoutes.create_provData(newProvDocument)
    
-   return json.loads(provDocument.serialize())
+   return newProvDocument
 
 @router.post("/was_informed_by/{idActivity1}&{idActivity2}", response_description="Was Used")
 async def was_generated_by(idActivity1: str, idActivity2: str):
