@@ -19,6 +19,13 @@ router = APIRouter(
 async def sendToDatabase(provID, document):
    await provRoutes.update_provData(provID, document)
 
+def generateNewProvDocument(provDocument, lastProvDocument):
+   dataSTR = provDocument.serialize(None, 'json')
+   dataJSON = json.loads(dataSTR)
+   newProvDocument = lastProvDocument
+   newProvDocument["data"] = dataJSON
+   return newProvDocument
+
 @router.post("/was_used/{idActivity}&{idEntity}", response_description="Was Used")
 async def was_used(idActivity: str, idEntity: str):
    provDocument = await database.db['provenanceData'].find().to_list(1000)
@@ -37,10 +44,7 @@ async def was_used(idActivity: str, idEntity: str):
    # dictData = json.loads(provDocument.serialize())
    # await sendToDatabase(lastProvDocument["_id"], dictData)
    
-   dataSTR = provDocument.serialize(None, 'json')
-   dataJSON = json.loads(dataSTR)
-   newProvDocument = lastProvDocument
-   newProvDocument["data"] = dataJSON
+   newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
    await provRoutes.create_provData(newProvDocument)
    
    return newProvDocument
