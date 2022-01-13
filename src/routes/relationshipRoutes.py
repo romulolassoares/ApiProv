@@ -94,14 +94,15 @@ async def was_associated_with(idAgent: str, idActivity: str):
    lastProvDocument = provDocument[len(provDocument)-1]
 
    provDocument = function.json2DocumentProvenance(lastProvDocument['data'])
+   
    agentDB = await agentRoutes.show_agent(idAgent)
-
    activityDB = await activityRoutes.show_activity(idActivity)
-   agent = provenance.generateActivity(provDocument, agentDB['name'], agentDB['_id'])
-   activity = provenance.generateEntity(provDocument, activityDB['name'], activityDB['_id'])
+   
+   agent = provenance.generateAgent(provDocument, agentDB['name'], agentDB['_id'])
+   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'])
    
    # activity.wasAssociatedWith(agent)
-   agent.wasAssociatedWith(activity)
+   activity.wasAssociatedWith(agent)
    
    newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
    await provRoutes.create_provData(newProvDocument)
