@@ -6,6 +6,7 @@ from src.routes.acitivityRoutes import router as activity_router
 from src.routes.agentRoutes import router as agent_router
 from src.routes.entityRoutes import router as entity_router
 from src.routes.relationshipRoutes import router as relationship_routes
+# from src.routes.newRelationShipsRoutes import router as new_relationship_routes
 
 
 app = FastAPI()
@@ -15,6 +16,7 @@ app.include_router(activity_router)
 app.include_router(agent_router)
 app.include_router(entity_router)
 app.include_router(relationship_routes)
+# app.include_router(new_relationship_routes)
         
 
 @app.get("/", response_description="Home")
