@@ -88,7 +88,7 @@ async def was_attribuited_to(idAgent: str, idEntity: str):
    
    return newProvDocument
 
-@router.post("/was_associated_with/{idAgent}&{adActivity}", response_description="Was Used")
+@router.post("/was_associated_with/{idAgent}&{idActivity}", response_description="Was Used")
 async def was_associated_with(idAgent: str, idActivity: str):
    provDocument = await database.db['provenanceData'].find().to_list(10000)
    lastProvDocument = provDocument[len(provDocument)-1]
