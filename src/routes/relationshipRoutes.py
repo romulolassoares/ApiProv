@@ -159,7 +159,7 @@ async def was_informed_by(idActivity1: str, idActivity2: str):
    activity2DB = await activityRoutes.show_activity(idActivity2)
    
    activity1 = provenance.generateActivity(provDocument, activity1DB['name'], activity1DB['_id'])
-   activity2 = provenance.generateactivity(provDocument, activity2DB['name'], activity2DB['_id'])
+   activity2 = provenance.generateActivity(provDocument, activity2DB['name'], activity2DB['_id'])
    
    activity1.wasInformedBy(activity2)
    
