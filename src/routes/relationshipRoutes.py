@@ -88,20 +88,21 @@ async def was_attribuited_to(idAgent: str, idEntity: str):
    
    return newProvDocument
 
-@router.post("/was_associated_with/{idAgent}&{adActivity}", response_description="Was Used")
+@router.post("/was_associated_with/{idAgent}&{idActivity}", response_description="Was Used")
 async def was_associated_with(idAgent: str, idActivity: str):
    provDocument = await database.db['provenanceData'].find().to_list(10000)
    lastProvDocument = provDocument[len(provDocument)-1]
 
    provDocument = function.json2DocumentProvenance(lastProvDocument['data'])
+   
    agentDB = await agentRoutes.show_agent(idAgent)
-
    activityDB = await activityRoutes.show_activity(idActivity)
-   agent = provenance.generateActivity(provDocument, agentDB['name'], agentDB['_id'])
-   activity = provenance.generateEntity(provDocument, activityDB['name'], activityDB['_id'])
+   
+   agent = provenance.generateAgent(provDocument, agentDB['name'], agentDB['_id'])
+   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'])
    
    # activity.wasAssociatedWith(agent)
-   agent.wasAssociatedWith(activity)
+   activity.wasAssociatedWith(agent)
    
    newProvDocument = generateNewProvDocument(provDocument, lastProvDocument)
    await provRoutes.create_provData(newProvDocument)
@@ -158,7 +159,7 @@ async def was_informed_by(idActivity1: str, idActivity2: str):
    activity2DB = await activityRoutes.show_activity(idActivity2)
    
    activity1 = provenance.generateActivity(provDocument, activity1DB['name'], activity1DB['_id'])
-   activity2 = provenance.generateactivity(provDocument, activity2DB['name'], activity2DB['_id'])
+   activity2 = provenance.generateActivity(provDocument, activity2DB['name'], activity2DB['_id'])
    
    activity1.wasInformedBy(activity2)
    

@@ -25,7 +25,7 @@ async def show_agent(idAgent: str):
 
     raise HTTPException(status_code=404, detail=f"Agent {idAgent} not found")
 
-@router.get("/get/name/{nameAgent}}", response_description="Get a single agent by name", response_model=provenanceModel.agentModel)
+@router.get("/get/name/{nameAgent}", response_description="Get a single agent by name", response_model=provenanceModel.agentModel)
 async def show_agent_name(nameAgent: str):
     if (agent := await database.db["agent"].find_one({"name": nameAgent})) is not None:
         return agent
