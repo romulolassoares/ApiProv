@@ -1,3 +1,4 @@
+aiofiles==0.8.0
 anyio==3.4.0
 appdirs==1.4.4
 asgiref==3.4.1
