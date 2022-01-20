@@ -145,3 +145,22 @@ async def create_png(id: str):
     
     return FileResponse(path=file_path, media_type='application/octet-stream', filename=file_name)
 
+
+@router.get("/create_png_last", response_description="Convert the last prov document to a png")
+async def create_png_last():
+    # Get the last data on provenanceData database
+    provDocument = await database.db['provenanceData'].find().to_list(10000)
+    lastProvDocument = provDocument[len(provDocument)-1]
+    # Convet a povData from json to provenance document
+    
+    file_name = "provData.png"
+    
+    provenance_filepath = Path("/home/romulo/www/bolsa/ApiFiles/" + file_name)
+    file_path = str(provenance_filepath)
+    
+    provDocument = function.json2DocumentProvenance(lastProvDocument['data'])
+    dot = provDot.prov_to_dot(provDocument)
+    dot.write_png(provenance_filepath)
+    
+    return FileResponse(path=file_path, media_type='application/octet-stream', filename=file_name)
+
