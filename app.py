@@ -17,7 +17,7 @@ app.include_router(agent_router)
 app.include_router(entity_router)
 app.include_router(relationship_routes)
 # app.include_router(new_relationship_routes)
-        
+
 
 @app.get("/", response_description="Home")
 async def home():

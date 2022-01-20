@@ -36,7 +36,7 @@ async def show_activity_name(nameActivity: str):
 async def create_activity(activity: provenanceModel.activityModel = Body(...)):
    activity = jsonable_encoder(activity)
    
-   if (varActivity := await database.db["activity"].find_one({"_id": activity["name"]})) is not None:
+   if (varActivity := await database.db["activity"].find_one({"name": activity["name"]})) is not None:
       print("Already exists")
       return JSONResponse(status_code=status.HTTP_409_CONFLICT, content={"error": "Already exists"})
    else:
