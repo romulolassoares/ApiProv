@@ -56,6 +56,8 @@ class activityModel(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     name: str = Field(...)
     provType: str = Field(...)
+    start_time: str = Field(...)
+    end_time: str = Field(...)
     info: dict = Field(...)
 
     class Config:
@@ -64,18 +66,13 @@ class activityModel(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "1": {
-                    "name": "Transaction001",
-                    "provType": "transaction",
-                    "info": {
-                        "pki": "09090",
-                        "date": "date"
-                    }
-                },
-                "2": {
-                    "name": "DocGenerated001",
-                    "provType": "docGenerated",
-                    "info": {}
+                "name": "Transaction Name",
+                "start_time": "2013-01-01T00:00:00",
+                "end_time": "2013-01-01T00:00:00",
+                "provType": "Transaction Type",
+                "info": {
+                    "pki": "12345",
+                    "name": "Username"
                 }
             }
         }
@@ -83,6 +80,8 @@ class activityModel(BaseModel):
 class UpdateActivityModel(BaseModel): 
     name: Optional[str]
     provType: Optional[str]
+    start_time: Optional[str]
+    end_time: Optional[str]
     info: Optional[dict]
 
     class Config:
@@ -90,11 +89,13 @@ class UpdateActivityModel(BaseModel):
         json_encoders = {ObjectId: str}
         schema_extra = {
             "example": {
-                "name": "Transaction001",
-                "provType": "transaction",
+                "name": "Transaction Name",
+                "start_time": "2013-01-01T00:00:00",
+                "end_time": "2013-01-01T00:00:00",
+                "type": "Transaction Type",
                 "info": {
-                    "pki": "09090",
-                    "date": "date"
+                    "pki": "12345",
+                    "name": "Username"
                 }
             }
         }

@@ -34,7 +34,11 @@ async def show_activity_name(nameActivity: str):
  
 @router.post("/post/", response_description="Add new activity", response_model=provenanceModel.activityModel)
 async def create_activity(activity: provenanceModel.activityModel = Body(...)):
+   print("test")
+   print(activity)
    activity = jsonable_encoder(activity)
+   
+   print(activity)
    
    if (varActivity := await database.db["activity"].find_one({"name": activity["name"]})) is not None:
       print("Already exists")

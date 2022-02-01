@@ -7,62 +7,7 @@ from pathlib import Path
 import json
 
 
-def generateProvData():
-    document = prov.ProvDocument()
 
-    document.set_default_namespace('http://localhost:4444/')
-    document.add_namespace('example', 'http://localhost:4444/example/')
-
-    entityPrint = document.entity(
-        'print', {prov.PROV_TYPE: "print", "destination": "iot1"})
-
-    entityDoc = document.entity('document', {
-                                prov.PROV_TYPE: "doc", "author": "Romulo", "title": "Doc Title", "format": "pdf"})
-
-    activityTransaction = document.activity(
-        "transaction001",
-        datetime.datetime.now(),
-        None,
-        {
-            prov.PROV_TYPE: "transaction",
-            "transactionKey": "e619269265072f5b3c9b3cce1ed0ebe2",
-            "createdAt": datetime.datetime.now(),
-        }
-    )
-
-    activityGeneratePrint = document.activity(
-        "generetedPrinting001",
-        datetime.datetime.now(),
-        None,
-        {
-            prov.PROV_TYPE: "docGenerated",
-        }
-    )
-
-    infoDictPrint = {
-        "pki": "97f3c717da19b4697ae9884e67aabce6"
-    }
-    info = json.dumps(infoDictPrint, indent=2)
-    agent = document.agent(
-        "user - r01",
-        {
-            prov.PROV_TYPE: "user",
-            "pki": "97f3c717da19b4697ae9884e67aabce6",
-        }
-    )
-
-    entityDoc.wasGeneratedBy(activityGeneratePrint)
-    entityDoc.wasDerivedFrom(entityPrint)
-
-    activityTransaction.used(entityPrint)
-    activityTransaction.wasAssociatedWith(agent)
-
-    activityGeneratePrint.wasInformedBy(activityTransaction)
-
-    entityPrint.wasGeneratedBy(activityTransaction)
-    entityPrint.wasAttributedTo(agent)
-
-    return document
 
 def generateDocument():
     document = prov.ProvDocument()
@@ -169,14 +114,24 @@ def generateImage(document):
     dot.write_png(provenance_filepath.with_suffix('.png'))
     
     
-def generateActivity(document, name, id):
+        # "Transaction",
+        # "2012-03-31T09:21:00",
+        # "2012-04-01T15:21:00",
+        # {
+        #     prov.PROV_TYPE: "transaction",
+        #     "transactionKey": "e619269265072f5b3c9b3cce1ed0ebe2",
+        #     "from": "Empresa A",
+        #     "destination": "Empresa B",
+        # }
+    
+def generateActivity(document, name, id, startTime, endTime, provType):
     activity = document.activity(
         name,
-        datetime.datetime.now(),
-        None,
+        startTime,
+        endTime,
         {
-            prov.PROV_TYPE: "docGenerated",
-            "id": id
+            prov.PROV_TYPE: provType,
+            "id": id,
         }
     ) 
     return activity

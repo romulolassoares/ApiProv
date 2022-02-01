@@ -36,7 +36,7 @@ async def was_used(idActivity: str, idEntity: str):
    activityDB = await activityRoutes.show_activity(idActivity)
    entityDB = await entityRoutes.show_entity(idEntity)
    
-   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'])
+   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'], activityDB['start_time'], activityDB['end_time'], activityDB['provType'])
    entity = provenance.generateEntity(provDocument, entityDB['name'], entityDB['_id'])
    
    activity.used(entity)
@@ -59,7 +59,7 @@ async def was_generated_by(idActivity: str, idEntity: str):
    activityDB = await activityRoutes.show_activity(idActivity)
    entityDB = await entityRoutes.show_entity(idEntity)
    
-   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'])
+   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'], activityDB['start_time'], activityDB['end_time'], activityDB['provType'])
    entity = provenance.generateEntity(provDocument, entityDB['name'], entityDB['_id'])
    
    entity.wasGeneratedBy(activity)
@@ -78,7 +78,7 @@ async def was_attribuited_to(idAgent: str, idEntity: str):
    agentDB = await agentRoutes.show_agent(idAgent)
    entityDB = await entityRoutes.show_entity(idEntity)
    
-   agent = provenance.generateActivity(provDocument, agentDB['name'], agentDB['_id'])
+   agent = provenance.generateAgent(provDocument, agentDB['name'], agentDB['_id'])
    entity = provenance.generateEntity(provDocument, entityDB['name'], entityDB['_id'])
    
    entity.wasAttributedTo(agent)
@@ -99,7 +99,7 @@ async def was_associated_with(idAgent: str, idActivity: str):
    activityDB = await activityRoutes.show_activity(idActivity)
    
    agent = provenance.generateAgent(provDocument, agentDB['name'], agentDB['_id'])
-   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'])
+   activity = provenance.generateActivity(provDocument, activityDB['name'], activityDB['_id'], activityDB['start_time'], activityDB['end_time'], activityDB['provType'])
    
    # activity.wasAssociatedWith(agent)
    activity.wasAssociatedWith(agent)
@@ -158,8 +158,8 @@ async def was_informed_by(idActivity1: str, idActivity2: str):
    activity1DB = await activityRoutes.show_activity(idActivity1)
    activity2DB = await activityRoutes.show_activity(idActivity2)
    
-   activity1 = provenance.generateActivity(provDocument, activity1DB['name'], activity1DB['_id'])
-   activity2 = provenance.generateActivity(provDocument, activity2DB['name'], activity2DB['_id'])
+   activity1 = provenance.generateActivity(provDocument, activity1DB['name'], activity1DB['_id'], activity1DB['start_time'], activity1DB['end_time'], activity1DB['provType'])
+   activity2 = provenance.generateActivity(provDocument, activity2DB['name'], activity2DB['_id'], activity2DB['start_time'], activity2DB['end_time'], activity2DB['provType'])
    
    activity1.wasInformedBy(activity2)
    
